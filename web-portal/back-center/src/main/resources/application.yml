@@ -1,0 +1,74 @@
+server:
+  port: 8080
+  max-http-header-size: 8192
+  tomcat:
+    min-spare-threads: 5
+    max-threads: 300
+    max-connections: 8192
+    accept-count: 200
+    uri-encoding: UTF-8
+    relaxed-query-chars: <,>,[,\,],^,`,{,|,}
+    relaxed-path-chars: <,>,[,\,],^,`,{,|,}
+spring:
+  application:
+    name: micro-word-provider-service
+  profiles:
+    active: @activatedProperties@
+    include:
+      - config
+      - export
+      - nacos
+  boot:
+    admin:
+      client:
+        enabled: false
+  resources:
+    add-mappings: false
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: -1
+      max-request-size: -1
+  mvc:
+    throw-exception-if-no-handler-found: true
+  jackson:
+    time-zone: GMT+8
+    locale: zh_CN
+    date-format: "yyyy-MM-dd'T'HH:mm:ss"
+  cloud:
+    nacos:
+      discovery:
+        enabled: true
+        register-enabled: true
+      server-addr: 127.0.0.1:8848
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+    property:
+      #避免冲突
+      prefix: ENC@(
+      suffix: )
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    logfile:
+      enabled: false
+      external-file: ${log.path}/${spring.application.name}/log_info.log
+
+logging:
+  file:
+    path: ${logging.path:/home/logs}
+
+spire:
+  doc:
+    license:
+      # license.elic.xml 中的 key
+      key: xxx

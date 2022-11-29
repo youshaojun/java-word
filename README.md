@@ -1,37 +1,85 @@
-# java-word
+## 项目说明
 
-#### 介绍
-基于[POI-TL](http://deepoove.com/poi-tl/)生成word
+> 基于[POI-TL](http://deepoove.com/poi-tl/)生成word
 
-#### 软件架构
-软件架构说明
+**由于`POI-TL`依赖`apache.poi`,
+为避免应用使用造成冲突(应用中使用到依赖`apache.poi`的其他框架, 如`EasyExcel`等)
+本项目将相关的word操作进行包装, 提供简单的Feign接口调用方式完成word模板的处理**
 
+**具体操作请参考`com.xm.web.FileHandleTest` & `com.xm.web.WordTest`**
 
-#### 安装教程
+编号 | 功能 | 代码
+--- | ---|---|
+1| 生成word| WordController.create
+2| 文件转换/更新目录/加水印|FileHandleController.fileConvert
+3| 提取pdf文本内容|FileHandleController.pdfExtract
+4| pdf转html|FileHandleController.pdf2Html
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+#### 支持word模板的包装操作:
 
-#### 使用说明
+- [x] 普通列表
+- [x] 含超链接列表
+- [x] 图片
+- [x] 柱状图
+- [x] 饼图
+- [x] 嵌套文档
+- [x] 区块对
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+> 基于[spire.doc](https://www.e-iceblue.cn/Introduce/Spire-Doc-JAVA.html)操作文件
 
-#### 参与贡献
+> 基于`spire.doc`更新word文档目录
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+`免费版限制内容不超过500个段落, 不出超过25个表格, 超过部分会被截断`
 
+### 项目结构
+<details>
+<summary>展开查看</summary>
+<pre><code>.
+├─business-center
+│  └─api-center
+│      ├─api-center-provider
+│      │  └─src
+│      │      └─main
+│      │          ├─java
+│      │          │  └─com
+│      │          │      └─xm
+│      │          │          └─word
+│      │          │              ├─domain
+│      │          │              │  └─wrap
+│      │          │              └─entity
+│      │          └─resources
+│      └─api-center-service
+│          └─src
+│              └─main
+│                  ├─java
+│                  │  └─com
+│                  │      └─xm
+│                  │          └─word
+│                  │              ├─policy
+│                  │              ├─service
+│                  │              │  └─impl
+│                  │              └─utils
+│                  └─resource
+└─web-portal
+    └─back-center
+        └─src
+            ├─main
+            │  ├─java
+            │  │  └─com
+            │  │      └─xm
+            │  │          └─web
+            │  │              └─controller
+            │  └─resources
+            └─test
+                ├─java
+                │  └─com
+                │      └─xm
+                │          └─web
+                └─resources
+                    ├─static
+                    │  ├─file
+                    │  └─images
+                    └─templates
 
-#### 特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+</code></pre>
+</details>

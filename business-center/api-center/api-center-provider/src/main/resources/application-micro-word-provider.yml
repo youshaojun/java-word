@@ -1,0 +1,4 @@
+word-provider:
+  service:
+    application:
+      name: micro-word-provider-service

@@ -1,0 +1,39 @@
+feign:
+  client:
+    config:
+      default:
+        connect-timeout: 5000
+        read-timeout: 600000
+  compression:
+#    request:
+#      enabled: true
+    response:
+      enabled: true
+  okhttp:
+    enabled: true
+spring:
+  cloud:
+    nacos:
+      server-addr: 172.18.255.9:8848
+      config:
+        file-extension: yaml
+      discovery:
+        watch:
+          enabled: true
+        watch-delay: 10000
+    loadbalancer:
+      enabled: true
+      retry:
+        enabled: false
+    inetutils:
+      ignored-interfaces:
+        - ^docker0$
+        - ^veth.*
+        - ^br-.*
+        - ^VM.*
+      preferred-networks:
+        - ^172.18
+        - ^192.18
+  main:
+    # 覆盖定义的Bean
+    allow-bean-definition-overriding: true
