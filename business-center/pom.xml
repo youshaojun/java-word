@@ -32,11 +32,11 @@
     <distributionManagement>
         <repository>
             <id>local-center</id>
-            <url>http://172.18.255.8:8060/repository/maven-releases/</url>
+            <url>http://127.0.0.1:8060/repository/maven-releases/</url>
         </repository>
         <snapshotRepository>
             <id>nexus-snapshots</id>
-            <url>http://172.18.255.8:8060/repository/maven-snapshots/</url>
+            <url>http://127.0.0.1:8060/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 

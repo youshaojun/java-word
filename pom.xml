@@ -215,7 +215,7 @@
     <repositories>
         <repository>
             <id>local-center</id>
-            <url>http://172.18.255.8:8060/repository/maven-public/</url>
+            <url>http://127.0.0.1:8060/repository/maven-public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -232,7 +232,7 @@
     <pluginRepositories>
         <pluginRepository>
             <id>local-center</id>
-            <url>http://172.18.255.8:8060/repository/maven-public/</url>
+            <url>http://127.0.0.1:8060/repository/maven-public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -245,11 +245,11 @@
     <distributionManagement>
         <repository>
             <id>local-center</id>
-            <url>http://172.18.255.8:8060/repository/maven-releases/</url>
+            <url>http://127.0.0.1:8060/repository/maven-releases/</url>
         </repository>
         <snapshotRepository>
             <id>nexus-snapshots</id>
-            <url>http://172.18.255.8:8060/repository/maven-snapshots/</url>
+            <url>http://127.0.0.1:8060/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
