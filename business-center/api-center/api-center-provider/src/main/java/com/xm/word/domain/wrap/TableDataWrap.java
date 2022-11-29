@@ -27,9 +27,10 @@ public class TableDataWrap extends DataType {
     private String urlColumnName = "url";
 
     /**
-     * 超链接字段对齐方式, 默认左对齐, 1 左对齐, 2 居中, 3 右对齐
+     * 超链接字段对齐方式, 默认左对齐
+     * @see org.apache.poi.xwpf.usermodel.ParagraphAlignment
      */
-    private Integer columnAlignment = 1;
+    private Integer columnAlignment = 11;
 
     /**
      * 超链接字段颜色, 默认0000FF
