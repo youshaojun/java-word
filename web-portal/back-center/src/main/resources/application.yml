@@ -36,12 +36,6 @@ spring:
     time-zone: GMT+8
     locale: zh_CN
     date-format: "yyyy-MM-dd'T'HH:mm:ss"
-  cloud:
-    nacos:
-      discovery:
-        enabled: true
-        register-enabled: true
-      server-addr: 127.0.0.1:8848
 
 jasypt:
   encryptor:
