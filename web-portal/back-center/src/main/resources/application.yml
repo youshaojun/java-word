@@ -18,6 +18,7 @@ spring:
       - config
       - export
       - nacos
+      - jodconverter
   boot:
     admin:
       client:
@@ -72,3 +73,6 @@ spire:
     license:
       # license.elic.xml 中的 key
       key: xxx
+  # 文件转换, 默认使用libreoffice
+  #converter:
+    #file: true

@@ -7,6 +7,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -30,8 +31,11 @@ import com.xm.word.domain.FileConvertRequest;
 import com.xm.word.domain.wrap.*;
 import com.xm.word.policy.LoopRowTableHyperlinkRenderPolicy;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.jodconverter.DocumentConverter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -42,6 +46,7 @@ import java.util.*;
  * @author yousj
  * @since 2022-05-17
  */
+@Slf4j
 @Component
 public class WordUtil {
 
@@ -62,7 +67,7 @@ public class WordUtil {
     public static String saveFile2Base64(FileConvertRequest request) {
         File file = saveToFile(request);
         String base64Str = Base64.encode(file);
-        FileUtil.del(file);
+        //FileUtil.del(file);
         return base64Str;
     }
 
@@ -209,20 +214,55 @@ public class WordUtil {
      * @see <a href="https://www.e-iceblue.cn/Introduce/Spire-Doc-JAVA.html">官方文档</a>
      */
     public static File saveToFile(String source, boolean updateTOC, FileTypeEnum fileType, String watermark, Float watermarkOpacity, Float watermarkFontSize) {
-        Document document = new Document(source);
-        String path = newPath(fileType);
-        File file = new File(path);
+        String newPath = newPath(fileType);
+        File newFile = new File(newPath);
         try {
-            if (updateTOC) {
-                document.updateTableOfContents();
-                setTOCParagraphLineSpacing(document, 20f);
+            converterFile(source, updateTOC, newPath, newFile);
+            if (StrUtil.isNotBlank(watermark) && fileType == FileTypeEnum.PDF) {
+                return PdfUtil.addWatermark(newFile, newPath(fileType), watermark, watermarkOpacity, watermarkFontSize);
             }
-            document.saveToFile(path, FileFormat.Auto);
         } finally {
-            document.close();
             FileUtil.del(source);
         }
-        return StrUtil.isNotBlank(watermark) && fileType == FileTypeEnum.PDF ? PdfUtil.addWatermark(file, newPath(fileType), watermark, watermarkOpacity, watermarkFontSize) : file;
+        return newFile;
+    }
+
+    @SneakyThrows
+    private static void converterFile(String source, boolean updateTOC, String newPath, File newFile) {
+        Environment environment = SpringUtil.getBean(Environment.class);
+        Boolean useSpire = environment.getProperty("spire.converter.file", Boolean.class, Boolean.FALSE);
+        if (useSpire) {
+            Document document = new Document(source);
+            try {
+                document.saveToFile(newPath, FileFormat.Auto);
+            } finally {
+                document.close();
+            }
+        } else {
+            DocumentConverter documentConverter = SpringUtil.getBean(DocumentConverter.class);
+            documentConverter.convert(new File(source)).to(newFile).execute();
+        }
+        if (updateTOC) {
+            updateTOC(newPath);
+        }
+    }
+
+    /**
+     * 使用spire.doc更新目录, 免费版更新存在一些限制并且更新的页码不准确
+     */
+    private static void updateTOC(String source) {
+        try {
+            Document document = new Document(source);
+            try {
+                document.updateTableOfContents();
+                setTOCParagraphLineSpacing(document, 20f);
+                document.saveToFile(source, FileFormat.Auto);
+            } finally {
+                document.close();
+            }
+        } catch (Exception ex) {
+            log.error("update toc is failed, msg [{}]", ex.getMessage());
+        }
     }
 
     private static void setTOCParagraphLineSpacing(Document document, float size) {

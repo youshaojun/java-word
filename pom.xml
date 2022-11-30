@@ -44,6 +44,9 @@
         <api-center-provider.version>0.0.1-SNAPSHOT</api-center-provider.version>
         <com.itextpdf.version>5.5.9</com.itextpdf.version>
         <com.itextpdf.asian.version>5.2.0</com.itextpdf.asian.version>
+        <jodconverter-spring-boot-starter.version>4.2.2</jodconverter-spring-boot-starter.version>
+        <jodconverter-core.version>4.2.2</jodconverter-core.version>
+        <jodconverter-local.version>4.2.2</jodconverter-local.version>
     </properties>
 
     <dependencies>
@@ -97,9 +100,9 @@
 
             <!-- 付费版 -->
             <!--<dependency>-->
-                <!--<groupId>e-iceblue</groupId>-->
-                <!--<artifactId>spire.doc</artifactId>-->
-                <!--<version>${spire.doc.version}</version>-->
+            <!--<groupId>e-iceblue</groupId>-->
+            <!--<artifactId>spire.doc</artifactId>-->
+            <!--<version>${spire.doc.version}</version>-->
             <!--</dependency>-->
 
             <dependency>
@@ -164,6 +167,24 @@
                 <artifactId>itext-asian</artifactId>
                 <version>${com.itextpdf.asian.version}</version>
             </dependency>
+
+            <!--jodconverter-->
+            <dependency>
+                <groupId>org.jodconverter</groupId>
+                <artifactId>jodconverter-spring-boot-starter</artifactId>
+                <version>${jodconverter-spring-boot-starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jodconverter</groupId>
+                <artifactId>jodconverter-core</artifactId>
+                <version>${jodconverter-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jodconverter</groupId>
+                <artifactId>jodconverter-local</artifactId>
+                <version>${jodconverter-local.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

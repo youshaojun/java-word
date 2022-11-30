@@ -31,6 +31,24 @@
 
 `免费版限制内容不超过500个段落, 不出超过25个表格, 超过部分会被截断`
 
+#### LibreOffice
+免费版的`spire`操作文档可能会出现水印, 增加[LibreOffice](https://www.libreoffice.org)方式转换文件
+> windows安装
+
+[点击下载win-x86_64_7.4.3](https://www.libreoffice.org/donate/dl/win-x86_64/7.4.3/zh-CN/LibreOffice_7.4.3_Win_x64.msi)
+
+> linux 安装
+
+```shell
+# 安装libreoffice
+yum install libreoffice-headless
+yum install libreoffice-writer
+# 字体
+mkdir /usr/share/fonts/win
+# 将C:\Windows\Fonts文件夹下的需要使用的字体上传到/usr/share/fonts/win文件夹下
+# 刷新
+fc-cache -fv  && fc-list
+```
 ### 项目结构
 <details>
 <summary>展开查看</summary>
