@@ -67,7 +67,7 @@ public class WordUtil {
     public static String saveFile2Base64(FileConvertRequest request) {
         File file = saveToFile(request);
         String base64Str = Base64.encode(file);
-        //FileUtil.del(file);
+        FileUtil.del(file);
         return base64Str;
     }
 
