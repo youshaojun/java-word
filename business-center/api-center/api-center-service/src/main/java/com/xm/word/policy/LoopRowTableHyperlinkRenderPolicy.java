@@ -104,7 +104,7 @@ public class LoopRowTableHyperlinkRenderPolicy extends LoopRowTableRenderPolicy 
                 }
             }
         } catch (Exception ex) {
-            log.error("超链接设置失败, data: {}, msg: {}", data, ex.getMessage(), ex);
+           log.error("超链接设置失败, data: {}, msg: {}", data, ex.getMessage());
         }
     }
 
