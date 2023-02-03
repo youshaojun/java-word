@@ -7,6 +7,7 @@ import com.xm.word.domain.CreateWordRequest;
 import com.xm.word.domain.wrap.*;
 import com.xm.word.service.CreateWordService;
 import com.xm.word.utils.WordUtil;
+import com.xm.word.utils.WrapUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.junit.After;
@@ -83,9 +84,9 @@ public class WordTest {
     private Map<String, Object> assembleBasicFunctionsData() {
         Map<String, Object> data = new HashMap<>();
         // 图片
-        data.put("bankruptcyStatus", assemblePictureDataWrap());
+        data.put("bankruptcyStatus",WrapUtil.pictureDataWrap(80,23,wordUtil.getBytes("static/images/bankruptcy.png")));
         // 柱状图
-        data.put("chart", chartDateWrap());
+        data.put("chart", WrapUtil.barChartDataWrap("统计图", new String[]{"2020", "2021", "2022"}, new Long[]{100L, 200L, 300L}));
         // 列表
         // 默认使用LoopRowTableRenderPolicy插件
         setList(data, DataTypeEnum.DEFAULT_TABLE, list(), "01");
@@ -109,47 +110,20 @@ public class WordTest {
             setList(sectionData, DataTypeEnum.TABLE_HYPERLINK, list(), "02");
             sections.add(sectionData);
         }
-        SectionsWrap sectionsWrap = new SectionsWrap();
-        sectionsWrap.setSections(sections);
-        sectionsWrap.setType(DataTypeEnum.SECTIONS.getType());
-        data.put("sections", sectionsWrap);
+        data.put("sections", WrapUtil.sectionsWrap(sections));
         return data;
     }
 
     private Map<String, Object> assembleNestedData() {
         Map<String, Object> data = new HashMap<>();
         // 嵌套一个包含基础功能的文档
-        NestedWrap nestedWrap01 = new NestedWrap();
-        nestedWrap01.setData(Collections.singletonList(assembleBasicFunctionsData()));
-        nestedWrap01.setNestedTemplate(wordUtil.getBytes("templates/basicFunctionsDemo.docx"));
-        nestedWrap01.setType(DataTypeEnum.NESTED_DOC.getType());
-        data.put("nested01", nestedWrap01);
+        data.put("nested01", WrapUtil.nestedWrap(Collections.singletonList(assembleBasicFunctionsData()),
+                wordUtil.getBytes("templates/basicFunctionsDemo.docx")));
 
         // 嵌套包含多个区块对的文档
-        NestedWrap nestedWrap02 = new NestedWrap();
-        nestedWrap02.setData(Arrays.asList(assembleSectionsData(), assembleSectionsData()));
-        nestedWrap02.setNestedTemplate(wordUtil.getBytes("templates/sectionsDemo.docx"));
-        nestedWrap02.setType(DataTypeEnum.NESTED_DOC.getType());
-        data.put("nested02", nestedWrap02);
+        data.put("nested02", WrapUtil.nestedWrap(Arrays.asList(assembleSectionsData(), assembleSectionsData()),
+                wordUtil.getBytes("templates/sectionsDemo.docx")));
         return data;
-    }
-
-    private PictureDataWrap assemblePictureDataWrap() {
-        PictureDataWrap pictureDataWrap = new PictureDataWrap();
-        pictureDataWrap.setWidth(80);
-        pictureDataWrap.setHeight(23);
-        pictureDataWrap.setPictureData(wordUtil.getBytes("static/images/bankruptcy.png"));
-        pictureDataWrap.setType(DataTypeEnum.PICTURE.getType());
-        return pictureDataWrap;
-    }
-
-    private ChartDataWrap chartDateWrap() {
-        ChartDataWrap chartDataWrap = new ChartDataWrap();
-        chartDataWrap.setTitle("统计图");
-        chartDataWrap.setChartX(new String[]{"2020", "2021", "2022"});
-        chartDataWrap.setChartY(new Long[]{100L, 200L, 300L});
-        chartDataWrap.setType(DataTypeEnum.BAR_CHART.getType());
-        return chartDataWrap;
     }
 
     private void setList(Map<String, Object> data, DataTypeEnum dataTypeEnum, List list, String suffix) {
