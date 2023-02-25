@@ -8,6 +8,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import cn.hutool.http.HtmlUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -25,6 +26,8 @@ import com.spire.doc.LineSpacingRule;
 import com.spire.doc.Section;
 import com.spire.doc.documents.Paragraph;
 import com.spire.doc.documents.StructureDocumentTag;
+import com.spire.doc.documents.TextSelection;
+import com.spire.doc.fields.TextRange;
 import com.spire.license.LicenseProvider;
 import com.xm.word.domain.CreateWordRequest;
 import com.xm.word.domain.FileConvertRequest;
@@ -39,8 +42,11 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.awt.*;
 import java.io.*;
 import java.util.*;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * @author yousj
@@ -285,6 +291,34 @@ public class WordUtil {
             }
         }
     }
+
+	/**
+	 * 文本高亮
+	 * <red>content</red>
+	 */
+	public static void highlight(String fileName) {
+		try {
+			Document document = new Document();
+			try {
+				document.loadFromFile(fileName);
+				Pattern pattern = Pattern.compile("<red[^>]*>([\\s\\S]*)<\\/red>");
+				TextSelection[] textSelections = document.findAllPattern(pattern);
+				if (Objects.isNull(textSelections)) {
+					return;
+				}
+				for (TextSelection selection : textSelections) {
+					TextRange oneRange = selection.getAsOneRange();
+					oneRange.setText(HtmlUtil.unwrapHtmlTag(oneRange.getText(), "red"));
+					oneRange.getCharacterFormat().setTextColor(Color.RED);
+				}
+				document.saveToFile(fileName, FileFormat.Auto);
+			} finally {
+				document.close();
+			}
+		} catch (Exception ex) {
+			log.error("set highlight is failed, msg [{}]", ex.getMessage());
+		}
+	}
 
     public static String newPath(FileTypeEnum fileType) {
         return newPath(fileType.getSuffix());
