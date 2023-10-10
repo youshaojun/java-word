@@ -3,6 +3,10 @@ package com.xm.web;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 
+import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.config.Configure;
+import com.deepoove.poi.config.ConfigureBuilder;
+import com.deepoove.poi.plugin.table.MultipleRowTableRenderPolicy;
 import com.xm.word.domain.CreateWordRequest;
 import com.xm.word.domain.wrap.*;
 import com.xm.word.service.CreateWordService;
@@ -10,6 +14,7 @@ import com.xm.word.utils.WordUtil;
 import com.xm.word.utils.WrapUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -76,7 +82,32 @@ public class WordTest {
         result = createWordService.create(request);
     }
 
-    @After
+	@Test
+	public void testMultiRow() throws IOException {
+
+		Date date = new Date();
+		Map<String, Object> params = new HashMap<>();
+		params.put("title", "某某某会议");
+		params.put("date", date);
+		params.put("address", "某某会议室");
+
+		List<Report> reports = new ArrayList<>();
+
+
+		reports.add(new Report("王五", date, "汇报内容1"));
+		reports.add(new Report("张三", date, "汇报内容2"));
+		reports.add(new Report("李四", date, "汇报内容3"));
+		params.put("reports", reports);
+
+		ConfigureBuilder builder = Configure.builder();
+		builder.bind("reports", new MultipleRowTableRenderPolicy());
+		XWPFTemplate xt = XWPFTemplate.compile("src/test/resources/templates/renderMultipleRow.docx", builder.build())
+			.render(params);
+		xt.writeToFile(String.format("multiple-row-%d.docx", System.currentTimeMillis()));
+	}
+
+
+	@After
     public void after() {
         System.out.println(result);
     }
@@ -164,5 +195,17 @@ public class WordTest {
         private Date date;
 
     }
+
+	@Data
+	@AllArgsConstructor
+	@NoArgsConstructor
+	static class Report {
+		private String author;
+
+		private Date time;
+
+		private String content;
+
+	}
 
 }
